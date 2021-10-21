@@ -1,0 +1,18 @@
+log:
+  file: STDOUT
+  level: DEBUG
+  max_age: 1000h
+  rotate: 24h
+
+http:
+  addr: :8081
+  tag: /taskmate
+
+model:
+  enable: true
+  source: postgres
+  name: taskmate
+  user: admin
+  pwd: 17f16miM1PBio0FX
+  host: 172.168.60.10
+  port: 5433
