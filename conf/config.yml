@@ -16,3 +16,8 @@ model:
   pwd: 17f16miM1PBio0FX
   host: 172.168.60.10
   port: 5433
+
+cluster:
+  enable: true
+  etcdURLs:
+    - 127.0.0.1:2379

@@ -1,0 +1,3822 @@
+swagger: '2.0'
+info:
+  version: v0.0.1
+  title: TaskMate API
+  description: |-
+    TaskMate API
+host: 127.0.0.1
+schemes:
+  - http
+securityDefinitions:
+  bearer:
+    type: basic
+paths:
+  /taskmate/v1/python-versions:
+    get:
+      tags:
+        - Python Env
+      summary: 获取所有可用python版本
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 响应
+          schema:
+            $ref: '#/definitions/common_resp'
+  /user/v1/user-validator:
+    get:
+      tags:
+        - 用户服务
+      summary: 验证用户名是否存在
+      consumes:
+        - application/json
+      produces:
+        - appliacation/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: username
+          in: query
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/register:
+    post:
+      tags:
+        - 用户服务
+      summary: 注册
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_register_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/email-invite:
+    post:
+      tags:
+        - 用户服务
+      summary: 邮件邀请
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_email-invite_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/login:
+    post:
+      tags:
+        - 用户服务
+      summary: 登录
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/users_login_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/token-refresh:
+    post:
+      tags:
+        - 用户服务
+      summary: 刷新token
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/users/{id}':
+    get:
+      tags:
+        - 用户服务
+      summary: 根据id获取用户信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: 用户id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/users/token:
+    get:
+      tags:
+        - 用户服务
+      summary: 获取用户信息根据token
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/password:
+    put:
+      tags:
+        - 用户服务
+      summary: 修改用户密码
+      description: |
+        **需要权限:maintain_user**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_password_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/users:
+    get:
+      tags:
+        - 用户服务
+      summary: 根据条件获取用户信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: department_id
+          in: query
+          description: '部门id,type为companyDepartment'
+          type: string
+        - name: group_id
+          in: query
+          description: '组id,type为companyGroup'
+          type: string
+        - name: type
+          in: query
+          description: '查询类型:所有用户/公司所有用户/公司未分组用户/公司分组用户/公司分组根据组id/公司用户根据部门id'
+          enum:
+            - all
+            - companyAll
+            - companyUngroup
+            - companyInGroup
+            - companyGroup
+            - companyDepartment
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - 用户服务
+      summary: 修改用户信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_modify_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/users-role:
+    post:
+      tags:
+        - 用户服务
+      summary: 配置用户角色
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_roles_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/users-remove:
+    put:
+      tags:
+        - 用户服务
+      summary: 删除用户
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/user_remove_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/resource/users:
+    get:
+      tags:
+        - 用户服务
+      summary: 获取资源授权用户信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: mark_id
+          in: query
+          type: string
+          description: |
+            当mark_type为group时，需要部门id
+            当mark_type为user时，需要组id
+        - name: mark_type
+          in: query
+          type: string
+          enum:
+            - department
+            - group
+            - user
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/role-types:
+    get:
+      tags:
+        - 权限
+      summary: 获取角色类型列表
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/users/{id}/avatar':
+    post:
+      tags:
+        - 用户服务
+      summary: 上传用户头像
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: avator
+          in: formData
+          type: file
+          description: 头像
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: 用户id
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/roles:
+    post:
+      tags:
+        - 权限
+      summary: 添加角色
+      description: |
+        **需要权限:maintain_role**      
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/role_create_modify_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 权限
+      summary: 获取角色列表信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/roles_list_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/roles/{id}':
+    put:
+      tags:
+        - 权限
+      summary: 修改角色
+      description: |
+        **需要权限:maintain_role**      
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: 角色id
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/role_create_modify_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/roles-remove:
+    put:
+      tags:
+        - 权限
+      summary: 删除角色
+      description: |
+        **需要权限:maintain_role**      
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/role_remove_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/roles-detail:
+    get:
+      tags:
+        - 权限
+      summary: 获取角色详细信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: role_id
+          in: query
+          description: 角色id
+          required: true
+          type: string
+        - name: role_type_id
+          in: query
+          description: 角色类型id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/permissions:
+    get:
+      tags:
+        - 权限
+      summary: 获取所有权限
+      consumes:
+        - application/json
+      produces:
+        - applictaion/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: role_type_id
+          in: query
+          type: string
+          required: true
+          description: 角色类型id
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/company-auth:
+    post:
+      tags:
+        - 公司
+      summary: 公司认证
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/company_auth_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/company-frameworks:
+    get:
+      tags:
+        - 公司
+      summary: 查询公司架构信息
+      consumes:
+        - application/josn
+      produces:
+        - applicaiton/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/company:
+    put:
+      tags:
+        - 公司
+      summary: 修改公司信息
+      consumes:
+        - application/json
+      produces:
+        - applicaiton/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/company_modify'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/department:
+    post:
+      tags:
+        - 公司
+      summary: 新建部门
+      description: |
+        **需要权限:maintain_department**   
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/department_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/department/{id}':
+    get:
+      tags:
+        - 公司
+      summary: 获取部门信息
+      consumes:
+        - application/json
+      produces:
+        - appliction/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: 部门id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - 公司
+      summary: 编辑部门
+      consumes:
+        - application/json
+      produces:
+        - applicaiton/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: 部门id
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/department_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    delete:
+      tags:
+        - 公司
+      summary: 删除部门
+      consumes:
+        - application/json
+      produces:
+        - applicaiton/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: 部门id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/group:
+    post:
+      tags:
+        - 公司
+      summary: 新建组
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/group_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/group/{id}':
+    get:
+      tags:
+        - 公司
+      summary: 获取组信息
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - 公司
+      summary: 编辑组
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/group_name_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    delete:
+      tags:
+        - 公司
+      summary: 删除组
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /user/v1/group/user:
+    post:
+      tags:
+        - 公司
+      summary: 添加组成员
+      description: |
+        **需要权限:maintain_group**   
+      consumes:
+        - applicaiton/json
+      produces:
+        - applicaiton/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/group_user_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/user/v1/company/{id}/logo':
+    post:
+      tags:
+        - 公司
+      summary: 上传公司logo
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: logo
+          in: formData
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /payment/v1/expenses:
+    post:
+      tags:
+        - 费用与支付
+      summary: 创建费用/支付请求
+      description: |
+        **需要权限:purchase_coin**
+        支持公对公转账
+        支付宝扫码支付
+        支付宝pc网站支付
+        支付宝手机网站支付
+
+        公对公转账支持上传多个凭证
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: method
+          description: '支付类型 transfer:公对公转账 wechat:微信 alipay_scan:支付宝扫码支付 alipay_page:支付宝pc网站支付 alipay_wap:支付宝手机网站支付'
+          type: string
+          required: true
+          enum:
+            - transfer
+            - wechat
+            - alipay_scan
+            - alipay_page
+            - alipay_wap
+        - in: formData
+          name: return_url
+          description: 支付结果跳转地址，如果支付类型是alipay_page或alipay_wap可填写此字段
+          type: string
+          required: false
+        - in: formData
+          name: amount
+          description: 金额
+          type: number
+          required: true
+        - in: formData
+          name: f1
+          description: 图片/视频等
+          type: file
+        - in: formData
+          name: f2
+          description: 图片/视频等
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 费用与支付
+      summary: 费用列表查询
+      description: |
+        **需要权限:purchase_coin**
+        鸣锣后台可以查询所有公司费用
+        普通用户只能查询自己公司的费用
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: 页号(从1开始，默认1)
+          type: number
+        - name: page-size
+          in: query
+          description: 每页显示数量(默认20)
+          type: number
+        - name: user_id
+          in: query
+          description: 用户id
+          type: string
+        - name: tenant_id
+          in: query
+          description: 租户id
+          type: string
+        - name: 'no'
+          in: query
+          description: '费用编号, 支持模糊查询'
+          type: string
+        - name: method
+          in: query
+          description: '支付类型 transfer:公对公转账 wechat:微信 alipay:支付宝'
+          type: string
+          enum:
+            - transfer
+            - wechat
+            - alipay
+        - name: expense_status
+          in: query
+          description: '支付状态 notpay:未支付 paying:支付中 success:支付成功 closed:已关闭'
+          type: string
+          enum:
+            - notpay
+            - paying
+            - success
+            - closed
+        - name: invoice_status
+          in: query
+          description: '开票状态,支持多状态查询 pending:未开票 requesting:请求中 done:已开票'
+          type: string
+        - name: date
+          in: query
+          description: '支付日期, rfc3339格式。例：查询2021-10-10，参数请传2021-10-10T00:00:00Z'
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/payment/v1/expenses/{id}':
+    get:
+      tags:
+        - 费用与支付
+      summary: 费用详情
+      description: |
+        **需要权限:purchase_coin**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 费用id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/payment/v1/expenses/{id}/operations':
+    put:
+      tags:
+        - 费用与支付
+      summary: 费用操作
+      description: |
+        **需要权限:purchase_coin**
+        **鸣锣后台管理员操作**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 费用id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/expense_operation'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /payment/v1/expenses-options:
+    get:
+      tags:
+        - 费用与支付
+      summary: 费用选项
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /payment/v1/sales-dashboard:
+    get:
+      tags:
+        - 费用与支付
+      summary: 费用仪表板
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/payment/v1/tenants/{id}/account':
+    get:
+      tags:
+        - 账户
+      summary: 查询租户账户
+      description: |
+        **需要权限:purchase_coin**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 租户id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+      deprecated: true
+  /product/v1/account:
+    get:
+      tags:
+        - 账户
+      summary: 查询租户账户
+      description: |
+        **需要权限:purchase_coin**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-templates:
+    get:
+      tags:
+        - 云桌面模板
+      summary: 查询云桌面模板
+      description: |
+        **普通用户只能看到已上架的模板**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: cpu
+          description: cpu
+          type: string
+        - in: query
+          name: gpu
+          description: gpu
+          type: string
+        - in: query
+          name: memory
+          description: memory
+          type: string
+        - in: query
+          name: tag
+          description: 标签
+          type: string
+        - in: query
+          name: status
+          description: '模板状态，该状态过滤仅鸣锣后台人员使用 pending:待上架 normal:已上架'
+          type: string
+          enum:
+            - pending
+            - normal
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-templates-options:
+    get:
+      tags:
+        - 云桌面模板
+      summary: 查询云桌面模板选项
+      description: |
+        **普通用户只能看到已上架的模板选项**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: cpu
+          description: cpu
+          type: string
+        - in: query
+          name: gpu
+          description: gpu
+          type: string
+        - in: query
+          name: memory
+          description: memory
+          type: string
+        - in: query
+          name: tag
+          description: 标签
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/desktop-templates/{id}':
+    get:
+      tags:
+        - 云桌面模板
+      summary: 查询云桌面模板详情
+      description: |
+        查询云桌面模板详情
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 桌面模板id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - 云桌面模板
+      summary: 修改云桌面模板
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+        支持部分修改
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 桌面模板id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/desktop_template_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-templates-price-calculator:
+    get:
+      tags:
+        - 云桌面模板
+      summary: 云桌面模板价格计算
+      description: |
+        云桌面模板价格计算
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: template_id
+          description: 模板id
+          type: string
+          required: true
+        - in: query
+          name: peroid
+          description: 购买周期时长(月数)
+          type: number
+          required: true
+        - in: query
+          name: total_num
+          description: 购买总数
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-templates-sync:
+    post:
+      tags:
+        - 云桌面模板
+      summary: 同步云桌面模板
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+        该接口会从华为侧获取所有云桌面套餐列表，并同步到数据库
+        新增的模板默认为pending状态(待上架)
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-images:
+    get:
+      tags:
+        - 云桌面模板
+      summary: 获取云桌面镜像列表
+      description: |
+        获取云桌面镜像列表
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/desktop-images-sync:
+    post:
+      tags:
+        - 云桌面模板
+      summary: 同步云桌面镜像
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+        该接口会从华为侧获取所有云桌面镜像列表，并同步到数据库
+        新增的镜像默认为pending状态(待上架)
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/desktop-images/{id}':
+    put:
+      tags:
+        - 云桌面模板
+      summary: 修改云桌面镜像
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+        支持部分修改
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 镜像id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/template_status'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/storage-templates:
+    get:
+      tags:
+        - 云存储模板
+      summary: 查询云存储模板
+      description: |
+        **普通用户只能看到已上架的模板**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: type
+          description: '存储类型 STANDARD:标准型 PERFORMANCE:性能型'
+          type: string
+          enum:
+            - STANDARD
+            - PERFORMANCE
+        - in: query
+          name: size
+          description: 存储容量
+          type: number
+        - in: query
+          name: status
+          description: '模板状态，该状态过滤仅鸣锣后台人员使用 pending:待上架 normal:已上架'
+          type: string
+          enum:
+            - pending
+            - normal
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    post:
+      tags:
+        - 云存储模板
+      summary: 创建云存储模板
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/storage_template_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/storage-templates-options:
+    get:
+      tags:
+        - 云存储模板
+      summary: 查询云存储模板选项
+      description: |
+        **普通用户只能看到已上架的模板选项**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: type
+          description: '存储类型 STANDARD:标准型 PERFORMANCE:性能型'
+          type: string
+          enum:
+            - STANDARD
+            - PERFORMANCE
+        - in: query
+          name: size
+          description: 存储容量
+          type: number
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/storage-templates/{id}':
+    get:
+      tags:
+        - 云存储模板
+      summary: 查询云存储模板详情
+      description: |
+        查询云存储模板详情
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 存储模板id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - 云存储模板
+      summary: 修改云存储模板
+      description: |
+        **只有鸣锣后台人员才能操作**
+        **需要权限use_admin**
+        支持部分修改
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 存储模板id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/storage_template_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/storage-templates-price-calculator:
+    get:
+      tags:
+        - 云存储模板
+      summary: 云存储模板价格计算
+      description: |
+        云存储模板价格计算
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: template_id
+          description: 模板id
+          type: string
+          required: true
+        - in: query
+          name: peroid
+          description: 购买周期时长(月数)
+          type: number
+          required: true
+        - in: query
+          name: total_num
+          description: 购买总数
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/compute-templates:
+    get:
+      tags:
+        - 云计算模板
+      summary: 查询云计算模板
+      description: |
+        **普通用户只能看到已上架的模板**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: cpu
+          description: cpu
+          type: string
+        - in: query
+          name: memory
+          description: memory
+          type: string
+        - in: query
+          name: cpu_name
+          description: cpu名称
+          type: string
+        - in: query
+          name: status
+          description: '模板状态，该状态过滤仅鸣锣后台人员使用 pending:待上架 normal:已上架'
+          type: string
+          enum:
+            - pending
+            - normal
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/compute-templates-options:
+    get:
+      tags:
+        - 云计算模板
+      summary: 查询云计算模板选项
+      description: |
+        **普通用户只能看到已上架的模板选项**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: cpu
+          description: cpu
+          type: string
+        - in: query
+          name: memory
+          description: memory
+          type: string
+        - in: query
+          name: cpu_name
+          description: cpu名称
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/compute-templates/{id}':
+    get:
+      tags:
+        - 云计算模板
+      summary: 查询云计算模板详情
+      description: |
+        查询云计算模板详情
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 模板id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/compute-templates-price-calculator:
+    get:
+      tags:
+        - 云计算模板
+      summary: 云计算模板价格计算
+      description: |
+        云计算模板价格计算
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: template_id
+          description: 模板id
+          type: string
+          required: true
+        - in: query
+          name: peroid
+          description: 购买周期时长(月数)
+          type: number
+          required: true
+        - in: query
+          name: total_num
+          description: 购买总数
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/film-templates:
+    get:
+      tags:
+        - 云制片模板
+      summary: 查询云制片模板
+      description: |
+        **普通用户只能看到已上架的模板**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: status
+          description: '模板状态，该状态过滤仅鸣锣后台人员使用 pending:待上架 normal:已上架'
+          type: string
+          enum:
+            - pending
+            - normal
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/film-templates-price-calculator:
+    get:
+      tags:
+        - 云制片模板
+      summary: 云制片模板价格计算
+      description: |
+        云制片模板价格计算
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: spec_id
+          description: 规格id
+          type: string
+          required: true
+        - in: query
+          name: system_option_id
+          description: 系统选项id
+          type: string
+          required: true
+        - in: query
+          name: system_option_num
+          description: 系统选项购买数量
+          type: number
+          required: true
+        - in: query
+          name: extra_option_id
+          description: 可选功能id
+          type: string
+          required: true
+        - in: query
+          name: extra_account_num
+          description: 额外账号数量
+          type: number
+          required: true
+        - in: query
+          name: extra_storage
+          description: 项目存储数量
+          type: number
+          required: true
+        - in: query
+          name: peroid
+          description: 购买周期时长(月数)
+          type: number
+          required: true
+        - in: query
+          name: total_num
+          description: 购买总数
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/recommend-product-templates:
+    get:
+      tags:
+        - 产品
+      summary: 查询推荐产品列表
+      description: |
+        如果不传token，则只返回在有效期内的卡片
+        如果传了token且用户是鸣锣后台管理员并拥有use_admin权限，则返回所有卡片
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: false
+          type: string
+        - in: query
+          name: product_type
+          description: '产品类型 desktop:云桌面 storage:云存储 compute:云计算 film:云制片'
+          type: string
+          enum:
+            - desktop
+            - storage
+            - compute
+            - film
+        - in: query
+          name: tab_name
+          description: 选显卡名称
+          type: string
+        - in: query
+          name: extra_type
+          description: 扩展类型，可用于前端ui组件
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+    post:
+      tags:
+        - 产品
+      summary: 创建/更新推荐产品, 支持批量
+      description: |
+        **需要权限:use_admin，且用户为鸣锣后台管理员**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/recommend_product_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/recommend-product-templates-removal:
+    put:
+      tags:
+        - 产品
+      summary: 删除推荐产品
+      description: |
+        **需要权限:use_admin，且用户为鸣锣后台管理员**
+        如果推荐卡片带有图片，则会把图片一起删除
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: array
+            items:
+              type: string
+              description: 记录id
+              example: awef
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/templates-images:
+    post:
+      tags:
+        - 产品
+      summary: 上传模板图片
+      description: |
+        **需要权限:use_admin，且用户为鸣锣后台管理员**
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: resources
+          description: 图片
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []  
+  /product/v1/products:
+    post:
+      tags:
+        - 产品
+      summary: 产品创建(购买)
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+
+        body示例:
+        购买云桌面/云存储/云计算
+        ```
+        {
+          "renew_method": "auto",
+          "template_id": "awefawe",
+          "peroid": 2,
+          "type": "desktop",
+          "total_num": 1
+        }
+        ```
+
+        购买云制片:
+        ```
+        {
+          "renew_method": "auto",
+          "peroid": 2,
+          "type": "film",
+          "total_num": 1,
+          "spec_id": "id",
+          "system_option_id": "id",
+          "system_option_num": 1,
+          "extra_option_id": "id",
+          "extra_account_num": 1,
+          "extra_storage": 1
+        }
+        ```
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/product_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 产品
+      summary: 查询已购买的产品列表
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: 页号(从1开始，默认1)
+          type: number
+        - name: page-size
+          in: query
+          description: 每页显示数量(默认20)
+          type: number
+        - in: query
+          name: 'no'
+          description: 产品编号
+          type: string
+        - in: query
+          name: product_type
+          description: 产品类型
+          type: string
+        - in: query
+          name: name
+          description: 产品名称
+          type: string
+        - in: query
+          name: tenant_id
+          description: 关联的租户id
+          type: string
+        - in: query
+          name: created_at
+          description: '购买时间, rfc3339格式。例：查询2021-10-10，参数请传2021-10-10T00:00:00Z'
+          type: string
+        - in: query
+          name: status
+          description: '产品状态,支持多状态查询,多个状态值用,分割 pending:创建中 normal:运行中 failure:故障 shutdown:关机'
+          type: string
+        - in: query
+          name: auth_status
+          description: '是否授权,支持多状态查询,多个状态值用,分割 true:已授权 false:未授权'
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/products/{id}/renew-method':
+    put:
+      tags:
+        - 产品
+      summary: 修改产品付费方式
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 产品id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/product_renew_method'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/products/{id}/renew':
+    put:
+      tags:
+        - 产品
+      summary: 产品续费
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 产品id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/product_renew'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/product-options:
+    get:
+      tags:
+        - 产品
+      summary: 查询产品选项
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: category
+          in: query
+          description: 产品大类
+          required: false
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/product-dashboard:
+    get:
+      tags:
+        - 产品
+      summary: 查询产品报表
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/product-users:
+    post:
+      tags:
+        - 产品
+      summary: 创建产品授权
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/product_user_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 产品
+      summary: 查询产品授权
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: query
+          name: product_id
+          description: 产品id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/product-users-removal:
+    put:
+      tags:
+        - 产品
+      summary: 删除产品授权
+      description: |
+        **需要权限:purchase_desktop或purchase_sfs，根据具体购买的产品类型**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: array
+            items:
+              type: string
+              description: 记录id
+              example: awef
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/product-overview:
+    get:
+      tags:
+        - 产品
+      summary: 查看云产品概览和价格
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/available-products:
+    get:
+      tags:
+        - 产品
+      summary: 查看可用产品
+      description: |
+        **需要权限:desktop_use**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: query_instance
+          in: query
+          description: 是否查询实例，如果设为true，则会查询每个产品到实际运行状态
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/products/{id}/desktop-auth':
+    post:
+      tags:
+        - 产品
+      summary: 云桌面登陆
+      description: |
+        **需要权限:desktop_use**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 产品id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/products/{id}/desktop-quit':
+    post:
+      tags:
+        - 产品
+      summary: 云桌面退出
+      description: |
+        **需要权限:desktop_use**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 产品id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  '/product/v1/products/{id}/operations':
+    put:
+      tags:
+        - 产品
+      summary: 云桌面操作，锁定/解锁，开机/关机/重启
+      description: |
+        **锁定/解锁 需要权限:product_use**
+        **开机/关机/重启 需要权限:use_desktop**
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 产品id
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/product_operation'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /product/v1/download:
+    get:
+      tags:
+        - 产品
+      summary: 下载链接
+      description: ''
+      consumes:
+        - application/json
+      parameters:
+        - name: type
+          in: query
+          required: true
+          type: string
+          description: type desktopWindows：云桌面windows版 desktopMac：云桌面mac版 assetWindows：资产windows版本 assetMac：资产mac版
+          enum:
+            - desktopWindows
+            - desktopMac
+            - assetWindows
+            - assetMac
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /asset/v1/tags:
+    post:
+      tags:
+        - 资产服务
+      summary: 创建标签
+      description: |
+        **需要权限:asset_upload
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/asset_tag_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 资产服务
+      summary: 查询标签列表
+      description: |
+        **需要权限:asset_upload
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /asset/v1/asset:
+    post:
+      tags:
+        - 资产服务
+      summary: 上传资产
+      description: |
+        **需要权限:asset_upload
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: name
+          description: 资产名称
+          type: string
+          required: true
+        - in: formData
+          name: tag_ids
+          description: '标签ids,id用逗号隔开'
+          type: string
+          required: true
+        - in: formData
+          name: price
+          description: 资产价格
+          type: number
+          required: true
+        - in: formData
+          name: desc
+          description: 资产描述
+          type: string
+          required: true
+        - in: formData
+          name: asset_type
+          description: 资产类型，多个用逗号隔开
+          type: string
+          required: true
+        - in: formData
+          name: asset
+          description: 资产文件
+          type: file
+        - in: formData
+          name: thumbnail
+          description: 缩略图
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 资产服务
+      summary: 获取资产列表
+      description: |
+        **需要权限:asset_upload
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: 页号(从1开始，默认1)
+          type: number
+        - name: page_size
+          in: query
+          description: 每页显示数量(默认20)
+          type: number
+        - in: query
+          name: user_name
+          description: 用户名
+          type: string
+        - in: query
+          name: tags
+          description: 标签 多个标签用逗号隔开
+          type: string
+        - in: query
+          name: price
+          description: 价格
+          type: string
+        - in: query
+          name: asset_type
+          description: 资产类型
+          type: string
+        - in: query
+          name: asset_name
+          description: 资产名称
+          type: string
+        - in: query
+          name: 'no'
+          description: 资产编号
+          type: string
+        - in: query
+          name: updated_at
+          description: '更新时间, rfc3339格式。例：查询2021-10-10，参数请传2021-10-10T00:00:00Z'
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /misc/v1/banners:
+    post:
+      tags:
+        - 首页
+      summary: 创建banner
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: content_data
+          description: banner参数（json字符串）
+          type: string
+          required: true
+        - in: formData
+          name: sort
+          description: 顺序
+          type: integer
+        - in: formData
+          name: image
+          description: banner
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []  
+    get:
+      tags:
+        - 首页
+      summary: 获取banner列表
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: [] 
+  '/misc/v1/banners/{id}':
+    put:
+      tags:
+        - 首页
+      summary: 修改banner
+      description: |
+        **需要权限: use_admin
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: bannerID
+          type: string
+          required: true  
+        - in: formData
+          name: content_data
+          description: banner参数（json字符串）
+          type: string
+          required: true
+        - in: formData
+          name: sort
+          description: 顺序
+          type: integer
+        - in: formData
+          name: image
+          description: banner
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []   
+  /misc/v1/banners-removal:
+    put:
+      tags:
+        - 首页
+      summary: 删除bannner
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/common_home_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /misc/v1/cards:
+    post:
+      tags:
+        - 首页
+      summary: 创建卡片
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/card_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 首页
+      summary: 查询卡片列表
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: [] 
+  '/misc/v1/cards/{id}':
+    put:
+      tags:
+        - 首页
+      summary: 修改卡片
+      description: |
+        **需要权限: use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: cardID
+          type: string
+          required: true  
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/card_profile'  
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /misc/v1/cards-removal:
+    put:
+      tags:
+        - 首页
+      summary: 删除卡片
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/common_home_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+  /misc/v1/params:
+    put:
+      tags:
+        - 首页
+      summary: 创建全局参数
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/params_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - 首页
+      summary: 查询全局参数
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: [] 
+  '/misc/v1/params/{key}':
+    get:
+      tags:
+        - 首页
+      summary: 根据key查询
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: key
+          description: 参数key值
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []     
+  /misc/v1/partners:
+    post:
+      tags:
+        - 首页
+      summary: 创建合作伙伴
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: content_data
+          description: banner参数（json字符串）
+          type: string
+          required: true
+        - in: formData
+          name: sort
+          description: 顺序
+          type: integer
+        - in: formData
+          name: image
+          description: banner
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []  
+    get:
+      tags:
+        - 首页
+      summary: 获取合作伙伴列表
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: [] 
+  '/misc/v1/partners/{id}':
+    put:
+      tags:
+        - 首页
+      summary: 修改合作伙伴
+      description: |
+        **需要权限: use_admin
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: 合作伙伴ID
+          type: string
+          required: true  
+        - in: formData
+          name: content_data
+          description: banner参数（json字符串）
+          type: string
+          required: true
+        - in: formData
+          name: sort
+          description: 顺序
+          type: integer
+        - in: formData
+          name: image
+          description: banner
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []     
+  /misc/v1/partners-removal:
+    put:
+      tags:
+        - 首页
+      summary: 删除合作伙伴
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/common_home_profile'
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []  
+  /misc/v1/images:
+    post:
+      tags:
+        - 首页
+      summary: 上传图片
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: formData
+          name: resources
+          description: 图片
+          type: file
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []  
+  /misc/v1/images-removal:
+    put:
+      tags:
+        - 首页
+      summary: 删除图片
+      description: |
+        **需要权限:use_admin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: 用户token
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            type: array
+            items:
+              type: string
+              description: 图片id
+              example: c583hepba7c5pp794gkg  
+      responses:
+        '200':
+          description: 标准响应
+          schema:
+            $ref: '#/definitions/common_resp'
+      security:
+        - bearer: []       
+definitions:
+  common_resp:
+    type: object
+    properties:
+      code:
+        type: string
+        description: '返回码, success表示成功'
+        example: success
+      msg:
+        type: string
+        description: 错误信息
+        example: err1
+      data:
+        type: object
+        description: 返回body
+      total:
+        type: number
+        description: 记录总数
+  expense_operation:
+    type: object
+    properties:
+      operation:
+        type: string
+        description: '操作 confirm:确认到账, 仅用于公对公转账并且不是驳回状态 request_invoice:请求开票，只有到账后才能执行 confirm_invoice:确认开票 reject_certification:凭证否决,只有凭证否决需要传type和remarks参数'
+        example: reject_certification
+        enum:
+          - confirm
+          - request_invoice
+          - confirm_invoice
+          - reject_certification
+      type:
+        type: string
+        description: '凭证操作类型 recharge_amount:充值金额 recharge_certification:充值凭证'
+        enum:
+          - recharge_amount
+          - recharge_certification
+        example: recharge_amount
+      remarks:
+        type: string
+        description: 备注
+        example: reject
+  template_status:
+    type: object
+    properties:
+      status:
+        type: string
+        description: '模板状态 pending:待上架 normal:已上架'
+        example: normal
+        enum:
+          - pending
+          - normal
+  desktop_template_profile:
+    allOf:
+      - $ref: '#/definitions/template_status'
+      - type: object
+        properties:
+          desc:
+            type: string
+            description: 套餐描述
+            example: awefawe
+          base_price:
+            type: number
+            description: 基础价格
+            example: 100
+          tags:
+            type: array
+            items:
+              type: string
+              description: 标签
+              example: 手绘板
+          status:
+            type: string
+            description: '模板状态 pending:待上架 normal:已上架'
+            example: normal
+            enum:
+              - pending
+              - normal
+  product_renew_method:
+    type: object
+    properties:
+      renew_method:
+        type: string
+        description: '付费模式 auto:自动续费 pre:预付费'
+        example: auto
+        enum:
+          - auto
+          - pre
+  product_renew:
+    allOf:
+      - $ref: '#/definitions/product_renew_method'
+      - type: object
+        properties:
+          template_id:
+            type: string
+            description: 产品模板id
+            example: awefawe
+          peroid:
+            type: number
+            description: 购买时长(月数)
+            example: 2
+          type:
+            type: string
+            description: '产品类型 desktop:云桌面 storage:云存储 compute:云计算 film:云制片'
+            example: desktop
+            enum:
+              - desktop
+              - storage
+              - compute
+              - film
+          spec_id:
+            type: string
+            description: '规格id, 购买云制片时需提交此字段'
+            example: id
+          system_option_id:
+            type: string
+            description: '系统选项id, 购买云制片时需提交此字段'
+            example: id
+          system_option_num:
+            type: number
+            description: '系统选项数量, 购买云制片时需提交此字段'
+            example: 1
+          extra_option_id:
+            type: string
+            description: '额外选项id, 购买云制片时需提交此字段'
+            example: id
+          extra_account_num:
+            type: number
+            description: '账号数量, 购买云制片时需提交此字段'
+            example: 1
+          extra_storage:
+            type: number
+            description: '存储数量(TB), 购买云制片时需提交此字段'
+            example: 1
+  product_profile:
+    allOf:
+      - $ref: '#/definitions/product_renew'
+      - type: object
+        properties:
+          total_num:
+            type: number
+            description: 购买数量
+            example: 1
+  product_user_profile:
+    type: object
+    properties:
+      product_id:
+        type: string
+        description: 产品id
+        example: awefaw
+      auth_type:
+        type: string
+        description: '授权对象类型 user:用户 group:组 department:部门'
+        example: user
+        enum:
+          - user
+          - group
+          - department
+      auth_id:
+        type: string
+        description: '授权对象, 用户id/组id/部门id'
+        example: awefaw
+  storage_template_profile:
+    allOf:
+      - $ref: '#/definitions/template_status'
+      - type: object
+        properties:
+          desc:
+            type: string
+            description: 套餐描述
+            example: awefawe
+          base_price:
+            type: number
+            description: 基础价格
+            example: 100
+          status:
+            type: string
+            description: '模板状态 pending:待上架 normal:已上架'
+            example: normal
+            enum:
+              - pending
+              - normal
+          type:
+            type: string
+            description: '存储类型 STANDARD:标准型 PERFORMANCE:性能型'
+            example: STANDARD
+            enum:
+              - STANDARD
+              - PERFORMANCE
+          size:
+            type: number
+            description: '存储容量(GB), 范围500~32768'
+            example: 500
+  asset_tag_profile:
+    type: object
+    properties:
+      tags:
+        type: array
+        items:
+          type: string
+          description: 资产标签
+          example: Car
+  user_mobile_profile:
+    type: object
+    properties:
+      mobile:
+        type: string
+        description: 手机号
+        example: 18888888888
+  user_register_profile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 用户名
+        example: snake_1
+      mobile:
+        type: string
+        description: 手机号
+        example: 18888888888
+      password:
+        type: string
+        description: 密码
+        example: 123456
+      email:
+        type: string
+        description: 邮箱
+        example: 1234@qq.com
+      code:
+        type: string
+        description: 验证码
+        example: 666666
+      secret:
+        type: string
+        description: 密保
+        example: 77VZDSQQFF2XJILBZQYLPNJIDYFTPWDC
+      user_type:
+        type: string
+        description: 用户类型
+        example: platform
+      type:
+        type: string
+        description: 注册类型
+        example: platform
+  user_email-invite_profile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 用户名
+        example: daffy_3
+      mobile:
+        type: string
+        description: 手机号
+        example: 17777777777
+      email:
+        type: string
+        description: 邮箱
+        example: 1111@qq.com
+      user_type:
+        type: string
+        description: 用户类型
+        example: platform
+      send_email:
+        type: boolean
+        description: 是否发送邮件
+        example: true
+      email_url:
+        type: string
+        description: 邮件地址
+  users_login_profile:
+    type: object
+    properties:
+      login_type:
+        type: string
+        description: 登录类型
+        example: phone
+      mobile:
+        type: string
+        description: 手机号
+        example: 18888888888
+      password:
+        type: string
+        description: 密码
+        example: 123456
+      code:
+        type: string
+        description: 验证码
+        example: 666666
+      secret:
+        type: string
+        description: 密保
+  user_password_profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 用户的id
+      oldPwd:
+        type: string
+        description: 旧密码
+      newPwd:
+        type: string
+        description: 新密码
+  user_roles_profile:
+    type: object
+    properties:
+      user_id:
+        type: string
+        description: 用户id
+      role_ids:
+        type: array
+        items:
+          type: string
+          description: 角色id
+  role_profile:
+    type: object
+    properties:
+      role_type_id:
+        type: string
+        description: 用户类型id
+      permission_ids:
+        type: array
+        items:
+          type: string
+          description: 权限id
+  role_create_modify_profile:
+    allOf:
+      - $ref: '#/definitions/role_profile'
+      - type: object
+        properties:
+          name:
+            type: string
+            description: 角色名
+  role_remove_profile:
+    type: object
+    properties:
+      role_ids:
+        type: array
+        items:
+          type: string
+          description: 角色id
+  roles_list_profile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 角色名
+      code:
+        type: string
+        description: 角色代号
+      page:
+        type: string
+        description: 页数
+      page_size:
+        type: string
+        description: 数量
+  company_modify:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 企业名
+        example: snake_1
+      tax_number:
+        type: string
+        description: 税号
+      bank_name:
+        type: string
+        description: 开户行
+      bank_count:
+        type: string
+        description: 银行账户
+      contract_name:
+        type: string
+        description: 联系人
+      contract_phone:
+        type: string
+        description: 联系电话
+  company_auth_profile:
+    allOf:
+      - $ref: '#/definitions/company_modify'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: 邮箱
+  department_profile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 部门名字
+        example: 测试部门
+  group_profile:
+    allOf:
+      - $ref: '#/definitions/department_profile'
+      - type: object
+        properties:
+          department_id:
+            type: string
+            description: 部门id
+  group_name_profile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 组名字
+        example: 组
+  group_user_profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 组id
+      user_id:
+        type: string
+        description: 用户id
+  user_modify_profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 用户id
+      name:
+        type: string
+        description: 用户名
+      email:
+        type: string
+        description: 邮箱
+      mobile:
+        type: string
+        description: 手机号
+      role_ids:
+        type: array
+        items:
+          type: string
+        description: 需要删除的角色id列表
+  user_remove_profile:
+    type: object
+    properties:
+      user_ids:
+        type: array
+        items:
+          type: string
+        description: 用户id列表
+  product_operation:
+    type: object
+    properties:
+      operation:
+        type: string
+        description: '云桌面操作 lock:锁定 unlock:解锁 poweron:开机 poweroff:关机 reset:重启'
+        enum:
+          - lock
+          - unlock
+          - poweron
+          - ppweroff
+          - reset
+  common_home_profile:
+    type: object
+    properties:
+      ids:
+        type: array
+        items:
+          type: string
+  card_profile:
+    type: object
+    properties:
+      content:
+        type: object
+        description: 卡片参数(必填)
+      sort:
+        type: integer
+        description: 顺序
+  params_profile:
+    type: object
+    properties:
+      content:
+        type: object
+        description: 全局参数(必填)
+      key:
+        type: string
+        description: 键(必填)      
+               
+  recommend_product_profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 推荐产品id，如果传了则更新，不传则新增
+        example: awefawef
+      product_type:
+        description: '产品类型 desktop:云桌面 storage:云存储 compute:云计算 film:云制片'
+        type: string
+        enum:
+          - desktop
+          - storage
+          - compute
+          - film
+        example: desktop
+      product_template_id:
+        type: string
+        description: 产品模板id
+        example: aewfawef
+      sort:
+        type: number
+        description: 排序字段，从1开始，从小到大排列
+        example: 1
+      recommend:
+        type: boolean
+        description: 是否推荐
+        example: true
+      base_price:
+        type: number
+        description: 月基础价格
+        example: 1000
+      config:
+        type: object
+        description: 一个合法的json对象，可根据需要填写
+        example: {}
+      tab_name:
+        type: string
+        description: 选项卡名称
+        example: tab1
+      extra_type:
+        type: string
+        description: 扩展类型，供前端ui组件使用
+        example: aaa
+      dt_begin:
+        type: string
+        description: 有效期开始，rfc3339格式, utc时间
+        example: '2021-01-01T00:00:00Z'
+      dt_end:
+        type: string
+        description: 有效期结束，rfc3339格式, utc时间
+        example: '2021-02-01T00:00:00Z'
+      image_id:
+        type: string
+        description: 关联的图片id，如果传了则回尝试删除原有图片
+        example: aewfawef
+        
+        
+        

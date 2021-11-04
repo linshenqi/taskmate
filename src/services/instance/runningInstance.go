@@ -1,6 +1,11 @@
 package instance
 
-import "github.com/linshenqi/taskmate/src/base"
+import (
+	"fmt"
+
+	"github.com/linshenqi/sptty"
+	"github.com/linshenqi/taskmate/src/base"
+)
 
 func (s *Service) getRunningInstances(ids []string) []*base.Instance {
 	s.mutex.Lock()
@@ -29,6 +34,13 @@ func (s *Service) removeRunningInstances(ids []string) {
 	defer s.mutex.Unlock()
 
 	for _, v := range ids {
-		delete(s.runningInstances, v)
+		ri, exist := s.runningInstances[v]
+		if exist {
+			if err := ri.Stop(); err != nil {
+				sptty.Log(sptty.ErrorLevel, fmt.Sprintf("%s.Stop Failed: %s", base.CurrentFuncName(), err.Error()), s.ServiceName())
+			}
+
+			delete(s.runningInstances, v)
+		}
 	}
 }

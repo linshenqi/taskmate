@@ -15,8 +15,6 @@ type Service struct {
 	db          *gorm.DB
 	serviceTask base.IServiceTask
 
-	workerID string
-
 	runningInstances map[string]*base.Instance
 	mutex            sync.Mutex
 }
@@ -25,7 +23,6 @@ func (s *Service) Init(app sptty.ISptty) error {
 	s.db = app.Model().(*sptty.ModelService).DB()
 	s.serviceTask = app.GetService(base.ServiceTask).(base.IServiceTask)
 
-	s.workerID = sptty.GenerateUID()
 	s.runningInstances = map[string]*base.Instance{}
 	s.mutex = sync.Mutex{}
 
